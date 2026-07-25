@@ -353,9 +353,29 @@ function ImagemServico({ servico, className }: { servico: Servico; className?: s
 }
 
 function Vitrine() {
+  const metade = Math.ceil(SERVICOS.length / 2);
+  const colunaA = SERVICOS.slice(0, metade);
+  const colunaB = SERVICOS.slice(metade);
+
+  const renderColuna = (itens: Servico[], chave: string) => (
+    <div className={styles.precosColuna} key={chave}>
+      {itens.map((servico) => (
+        <div className={styles.precoItem} key={servico.id}>
+          <span className={styles.precoIcone}>
+            <i className={`bx ${servico.icone}`} aria-hidden="true" />
+          </span>
+          <span className={styles.precoNome}>{servico.nome}</span>
+          <span className={styles.precoLinha} aria-hidden="true" />
+          <span className={styles.precoValor}>{formatarPreco(servico)}</span>
+          <p className={styles.precoDesc}>{servico.desc}</p>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
-    <section className={styles.vitrine} id="servicos">
-      <div className={styles.vitrineInner} data-aos="fade-up">
+    <section className={styles.precos} id="servicos">
+      <div className={styles.precosInner} data-aos="fade-up">
         <span className={styles.sectionEyebrow}>Valores</span>
         <h2 className={styles.sectionTitle}>Nossos serviços</h2>
         <p className={styles.sectionSubtitle}>
@@ -363,20 +383,9 @@ function Vitrine() {
           seu horário abaixo.
         </p>
 
-        <div className={styles.vitrineGrid}>
-          {SERVICOS.map((servico) => (
-            <article className={styles.vitrineCard} key={servico.id}>
-              <div className={styles.vitrineCardImgWrap}>
-                <ImagemServico servico={servico} className={styles.vitrineCardImg} />
-                <span className={styles.vitrineCardPreco}>{formatarMoeda(servico.preco)}</span>
-              </div>
-              <div className={styles.vitrineCardBody}>
-                <h3 className={styles.vitrineCardTitle}>{servico.nome}</h3>
-                <p className={styles.vitrineCardDesc}>{servico.desc}</p>
-                {servico.apartirDe && <span className={styles.vitrineCardApartir}>Valor a partir deste preço</span>}
-              </div>
-            </article>
-          ))}
+        <div className={styles.precosLista}>
+          {renderColuna(colunaA, "coluna-a")}
+          {renderColuna(colunaB, "coluna-b")}
         </div>
       </div>
     </section>
@@ -551,7 +560,7 @@ function CardAgendamento() {
                         onClick={() => handleEscolherServico(servico.id)}
                       >
                         <div className={styles.servicoCardIconWrap}>
-                          <ImagemServico servico={servico} className={styles.vitrineCardImg} />
+                          <ImagemServico servico={servico} className={styles.servicoCardImg} />
                         </div>
                         <div className={styles.servicoCardInfo}>
                           <span className={styles.servicoCardNome}>{servico.nome}</span>

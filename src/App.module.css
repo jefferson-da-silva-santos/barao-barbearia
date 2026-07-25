@@ -367,47 +367,18 @@
 }
 
 /* ============================================================
-   VITRINE DE SERVIÇOS (informativa)
+   VITRINE DE SERVIÇOS — lista de preços (sem imagens)
    ============================================================ */
 
-.vitrine {
+.precos {
   padding: 6em 0 5em;
 }
-.vitrineInner {
+.precosInner {
   width: 92%;
-  max-width: 1180px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.vitrineGrid {
-  margin-top: 2.4em;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.4em;
-}
-
-.vitrineCard {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--preto-suave);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio-lg);
-  overflow: hidden;
-  box-shadow: var(--sombra-sm);
-  transition: var(--transicao);
-}
-.vitrineCard:hover {
-  border-color: rgba(201, 162, 39, 0.4);
-  transform: translateY(-3px);
-}
-
-.vitrineCardImgWrap {
-  position: relative;
-  aspect-ratio: 16/10;
-  flex-shrink: 0;
-  overflow: hidden;
-  background-color: var(--carvao);
-}
 .placeholderImg {
   width: 100%;
   height: 100%;
@@ -418,51 +389,96 @@
   color: var(--dourado);
 }
 .placeholderImg i {
-  font-size: 2.4em;
+  font-size: 1.6em;
   line-height: 1;
 }
 
-.vitrineCardPreco {
-  position: absolute;
-  bottom: 0.8em;
-  right: 0.8em;
-  background-color: var(--preto);
-  color: var(--dourado-claro);
-  font-family: var(--fonte-display);
-  font-size: 1.1em;
-  letter-spacing: 0.5px;
-  padding: 0.3em 0.8em;
-  border-radius: var(--raio-pill);
-  box-shadow: var(--sombra-sm);
-  border: 1px solid var(--linha);
+.precosLista {
+  margin-top: 2.6em;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0;
+}
+@media (min-width: 860px) {
+  .precosLista {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3.2em;
+  }
 }
 
-.vitrineCardBody {
+.precosColuna {
   display: flex;
   flex-direction: column;
-  padding: 1.3em 1.4em 1.5em;
-  flex: 1;
 }
-.vitrineCardTitle {
+
+.precoItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.7em;
+  padding: 1.15em 0;
+  border-bottom: 1px solid var(--linha);
+  transition: var(--transicao);
+}
+.precoItem:hover {
+  border-bottom-color: rgba(201, 162, 39, 0.4);
+}
+.precoItem:hover .precoNome {
+  color: var(--dourado);
+}
+.precosColuna .precoItem:first-child {
+  padding-top: 0;
+}
+
+.precoIcone {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  border: 1.5px solid var(--dourado);
+  color: var(--dourado);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.precoNome {
   font-family: var(--fonte-display);
-  font-size: 1.25em;
+  font-size: 1.08em;
   letter-spacing: 0.4px;
   text-transform: uppercase;
   color: var(--branco);
+  transition: var(--transicao);
+  white-space: nowrap;
 }
-.vitrineCardDesc {
-  margin-top: 0.5em;
-  font-size: 0.92em;
-  line-height: 1.5;
-  color: var(--cinza);
+
+.precoLinha {
+  flex: 1 1 2em;
+  min-width: 1.4em;
+  border-bottom: 2px dotted rgba(246, 242, 231, 0.25);
+  height: 0;
+  align-self: center;
+  margin-bottom: 0.35em;
 }
-.vitrineCardApartir {
-  display: inline-block;
-  margin-top: 0.5em;
-  font-size: 0.72em;
-  font-weight: 700;
+
+.precoValor {
+  font-family: var(--fonte-display);
+  font-size: 1.15em;
   letter-spacing: 0.3px;
   color: var(--dourado);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.precoDesc {
+  flex-basis: 100%;
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--cinza);
+  margin-left: 2.7em;
+  margin-top: 0.3em;
 }
 
 /* ============================================================
@@ -684,6 +700,11 @@
   border-radius: var(--raio-sm);
   overflow: hidden;
   flex-shrink: 0;
+}
+.servicoCardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .servicoCardInfo {
