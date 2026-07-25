@@ -406,6 +406,13 @@
   }
 }
 
+@media (max-width: 860px) {
+   .precosLista :last-child .precoItem:first-child  {
+    padding: 1.15em 0;
+  }
+  
+}
+
 .precosColuna {
   display: flex;
   flex-direction: column;

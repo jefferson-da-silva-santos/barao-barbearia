@@ -391,7 +391,7 @@ function Vitrine() {
   const colunaB = LISTA_PRECOS.slice(metade);
 
   const renderColuna = (itens: Servico[], chave: string) => (
-    <div className={styles.precosColuna} key={chave}>
+    <div className={`${styles.precosColuna} ${chave}`} key={chave}>
       {itens.map((servico) => (
         <div className={styles.precoItem} key={servico.id}>
           <span className={styles.precoIcone}>
