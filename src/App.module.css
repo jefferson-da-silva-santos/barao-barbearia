@@ -750,6 +750,27 @@
   line-height: 1;
 }
 
+.adicionalWrap {
+  margin-top: 2em;
+  padding-top: 1.6em;
+  border-top: 1px dashed var(--linha);
+}
+
+.precoTagAdicional {
+  display: inline-block;
+  margin-left: 0.6em;
+  font-family: var(--fonte-corpo);
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--preto);
+  background-color: var(--dourado);
+  padding: 0.2em 0.55em;
+  border-radius: var(--raio-pill);
+  vertical-align: middle;
+}
+
 /* ----- Passo 2: data e horário ----- */
 
 .dataHoraWrap {
@@ -1138,6 +1159,20 @@
   color: var(--cinza);
 }
 
+.rodapeCredito {
+  display: block;
+  width: 92%;
+  max-width: 1180px;
+  margin: 0.6em auto 0;
+  text-align: center;
+  font-size: 0.72em;
+  color: rgba(156, 147, 132, 0.6);
+  transition: var(--transicao);
+}
+.rodapeCredito:hover {
+  color: var(--dourado);
+}
+
 /* ============================================================
    BOTÃO VOLTAR AO TOPO
    ============================================================ */
@@ -1233,6 +1268,49 @@
   }
   .galeriaGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Textos da área de agendamento maiores e mais legíveis no celular */
+  .tabLabel {
+    font-size: 1em;
+  }
+  .stepTitle {
+    font-size: 1.5em;
+  }
+  .stepHint {
+    font-size: 1.02em;
+  }
+  .servicoCardNome {
+    font-size: 1.12em;
+  }
+  .servicoCardDesc {
+    font-size: 0.95em;
+  }
+  .servicoCardPreco {
+    font-size: 1.05em;
+  }
+  .campoLabel {
+    font-size: 0.95em;
+  }
+  .campoHint {
+    font-size: 0.88em;
+  }
+  .campoInput {
+    font-size: 1.08em;
+  }
+  .horarioBtn {
+    font-size: 1em;
+    padding: 0.8em 0.5em;
+  }
+  .resumoLinhaLabel,
+  .resumoLinhaValor {
+    font-size: 1.05em;
+  }
+  .footerItens {
+    font-size: 0.88em;
+  }
+  .footerTotal {
+    font-size: 1.35em;
   }
 }
 
