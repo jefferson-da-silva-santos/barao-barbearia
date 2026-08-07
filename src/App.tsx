@@ -64,7 +64,6 @@ function lsRemove(...chaves: string[]): void {
 
 const LS_SERVICO = "bb_servico";
 const LS_BARBA = "bb_com_barba";
-const LS_BARBA = "bb_com_barba";
 const LS_DATA = "bb_data";
 const LS_HORA = "bb_hora";
 const LS_NOME = "bb_nome";
@@ -108,23 +107,10 @@ const LISTA_PRECOS: Servico[] = [
 
 // Barba não é mais escolhida como corte principal — é um adicional que soma
 // ao valor do corte escolhido no passo 1 do agendamento.
-const BARBA_ADICIONAL: Servico = {
-  id: "barba",
-  nome: "Barba",
-  desc: "Barba alinhada e desenhada na navalha, feita junto com o corte.",
-  preco: 10,
-  icone: "bxs-magic-wand",
-};
 
 // Lista usada só na vitrine "Nossos serviços" (informativa) — mostra o
 // adicional de barba junto com os cortes, mesmo ele não sendo selecionável ali.
-const LISTA_PRECOS: Servico[] = [
-  SERVICOS[0],
-  SERVICOS[1],
-  BARBA_ADICIONAL,
-  SERVICOS[2],
-  SERVICOS[3],
-];
+
 
 const GALERIA: FotoGaleria[] = [
   { id: "foto-1", imgLink: "https://instagram.fcau4-1.fna.fbcdn.net/v/t51.82787-15/731495779_18103994852327079_1763769142743397795_n.webp?_nc_cat=103&ig_cache_key=MzkzMzk4OTIzMzk2NTIwODQxMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=pLZAjSm3HrQQ7kNvwHIOg0j&_nc_oc=AdrervaB5K-J5BJwC4eQt3Ycm342MTHVKrZiMmLhkJJpjCTlPebYCoEe92Zv657FY6WXOfeboUbO3SSEkyRTAsR7&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcau4-1.fna&_nc_gid=LIAwbL_EW2el9neYk_mrag&_nc_ss=7a22e&oh=00_AQBlm6DpqEASyHCInh7Y19-JAaW7y1p83Qkb0V7cqbenSQ&oe=6A6AADA9", alt: "Corte realizado na Barão Barbearia" },
@@ -188,14 +174,6 @@ function formatarValorTotal(servico: Servico, comBarba: boolean): string {
   return servico.apartirDe ? `A partir de ${formatarMoeda(total)}` : formatarMoeda(total);
 }
 
-function valorTotal(servico: Servico, comBarba: boolean): number {
-  return servico.preco + (comBarba ? BARBA_ADICIONAL.preco : 0);
-}
-
-function formatarValorTotal(servico: Servico, comBarba: boolean): string {
-  const total = valorTotal(servico, comBarba);
-  return servico.apartirDe ? `A partir de ${formatarMoeda(total)}` : formatarMoeda(total);
-}
 
 function formatarDataBR(isoDate: string): string {
   if (!isoDate) return "";
@@ -317,10 +295,6 @@ const JEFFERSON_WHATSAPP = "5581999367426";
 const JEFFERSON_MENSAGEM =
   "Oi Jefferson, vim do site da Barão Barbearia e estou interessado em ter meu próprio agendamento online personalizado.";
 
-// Crédito discreto no rodapé, com link para o WhatsApp do Jefferson Dev.
-const JEFFERSON_WHATSAPP = "5581999367426";
-const JEFFERSON_MENSAGEM =
-  "Oi Jefferson, vim do site da Barão Barbearia e estou interessado em ter meu próprio agendamento online personalizado.";
 
 /* ============================================================
    HERO
@@ -424,9 +398,6 @@ function Vitrine() {
   const metade = Math.ceil(LISTA_PRECOS.length / 2);
   const colunaA = LISTA_PRECOS.slice(0, metade);
   const colunaB = LISTA_PRECOS.slice(metade);
-  const metade = Math.ceil(LISTA_PRECOS.length / 2);
-  const colunaA = LISTA_PRECOS.slice(0, metade);
-  const colunaB = LISTA_PRECOS.slice(metade);
 
   const renderColuna = (itens: Servico[], chave: string) => (
     <div className={`${styles.precosColuna} ${chave}`} key={chave}>
@@ -488,7 +459,7 @@ function CardAgendamento() {
 
   const [servicoId, setServicoId] = useState<string>(() => lsGet<string>(LS_SERVICO, ""));
   const [comBarba, setComBarba] = useState<boolean>(() => lsGet<boolean>(LS_BARBA, false));
-  const [comBarba, setComBarba] = useState<boolean>(() => lsGet<boolean>(LS_BARBA, false));
+  
   const [data, setData] = useState<string>(() => lsGet<string>(LS_DATA, ""));
   const [hora, setHora] = useState<string>(() => lsGet<string>(LS_HORA, ""));
   const [nome, setNome] = useState<string>(() => lsGet<string>(LS_NOME, ""));
