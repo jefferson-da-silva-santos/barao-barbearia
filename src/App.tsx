@@ -105,13 +105,6 @@ const LISTA_PRECOS: Servico[] = [
   SERVICOS[3],
 ];
 
-// Barba não é mais escolhida como corte principal — é um adicional que soma
-// ao valor do corte escolhido no passo 1 do agendamento.
-
-// Lista usada só na vitrine "Nossos serviços" (informativa) — mostra o
-// adicional de barba junto com os cortes, mesmo ele não sendo selecionável ali.
-
-
 const GALERIA: FotoGaleria[] = [
   { id: "foto-1", imgLink: "https://instagram.fcau4-1.fna.fbcdn.net/v/t51.82787-15/731495779_18103994852327079_1763769142743397795_n.webp?_nc_cat=103&ig_cache_key=MzkzMzk4OTIzMzk2NTIwODQxMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=pLZAjSm3HrQQ7kNvwHIOg0j&_nc_oc=AdrervaB5K-J5BJwC4eQt3Ycm342MTHVKrZiMmLhkJJpjCTlPebYCoEe92Zv657FY6WXOfeboUbO3SSEkyRTAsR7&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcau4-1.fna&_nc_gid=LIAwbL_EW2el9neYk_mrag&_nc_ss=7a22e&oh=00_AQBlm6DpqEASyHCInh7Y19-JAaW7y1p83Qkb0V7cqbenSQ&oe=6A6AADA9", alt: "Corte realizado na Barão Barbearia" },
   { id: "foto-2", imgLink: "https://instagram.fcau4-1.fna.fbcdn.net/v/t51.82787-15/733710420_18103979696327079_3021753043405523972_n.webp?_nc_cat=101&ig_cache_key=MzkzMzkwOTA2MzUwMTk3ODMwNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=DwI1RLR2uKoQ7kNvwFZhFOQ&_nc_oc=AdpS6JakmgUYcl5MI2F3LB4IQ0ssq9N_5vu_wCn6vyuMKSK3cZNALsto-JI9ZxIGPCT_hLDOe2nMDnj4kQGT3G4q&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fcau4-1.fna&_nc_gid=LIAwbL_EW2el9neYk_mrag&_nc_ss=7a22e&oh=00_AQBCkxpqVfknJ1YtoXYW9hHvUPax4-Wb6CUdz1ZuwroQXQ&oe=6A6AAC9C", alt: "Corte realizado na Barão Barbearia" },
@@ -173,7 +166,6 @@ function formatarValorTotal(servico: Servico, comBarba: boolean): string {
   const total = valorTotal(servico, comBarba);
   return servico.apartirDe ? `A partir de ${formatarMoeda(total)}` : formatarMoeda(total);
 }
-
 
 function formatarDataBR(isoDate: string): string {
   if (!isoDate) return "";
@@ -295,7 +287,6 @@ const JEFFERSON_WHATSAPP = "5581999367426";
 const JEFFERSON_MENSAGEM =
   "Oi Jefferson, vim do site da Barão Barbearia e estou interessado em ter meu próprio agendamento online personalizado.";
 
-
 /* ============================================================
    HERO
    ============================================================ */
@@ -400,15 +391,11 @@ function Vitrine() {
   const colunaB = LISTA_PRECOS.slice(metade);
 
   const renderColuna = (itens: Servico[], chave: string) => (
-    <div className={`${styles.precosColuna} ${chave}`} key={chave}>
+    <div className={styles.precosColuna} key={chave}>
       {itens.map((servico) => (
         <div className={styles.precoItem} key={servico.id}>
           <span className={styles.precoIcone}>
             <i className={`bx ${servico.icone}`} aria-hidden="true" />
-          </span>
-          <span className={styles.precoNome}>
-            {servico.nome}
-            {servico.id === "barba" && <span className={styles.precoTagAdicional}>adicional</span>}
           </span>
           <span className={styles.precoNome}>
             {servico.nome}
@@ -459,7 +446,6 @@ function CardAgendamento() {
 
   const [servicoId, setServicoId] = useState<string>(() => lsGet<string>(LS_SERVICO, ""));
   const [comBarba, setComBarba] = useState<boolean>(() => lsGet<boolean>(LS_BARBA, false));
-  
   const [data, setData] = useState<string>(() => lsGet<string>(LS_DATA, ""));
   const [hora, setHora] = useState<string>(() => lsGet<string>(LS_HORA, ""));
   const [nome, setNome] = useState<string>(() => lsGet<string>(LS_NOME, ""));
@@ -467,7 +453,6 @@ function CardAgendamento() {
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => { lsSet(LS_SERVICO, servicoId); }, [servicoId]);
-  useEffect(() => { lsSet(LS_BARBA, comBarba); }, [comBarba]);
   useEffect(() => { lsSet(LS_BARBA, comBarba); }, [comBarba]);
   useEffect(() => { lsSet(LS_DATA, data); }, [data]);
   useEffect(() => { lsSet(LS_HORA, hora); }, [hora]);
@@ -531,11 +516,8 @@ function CardAgendamento() {
       "----------------------------------------",
       `Serviço: ${servicoEscolhido ? servicoEscolhido.nome : ""}`,
       comBarba ? `Adicional: Barba (${formatarMoeda(BARBA_ADICIONAL.preco)})` : null,
-      comBarba ? `Adicional: Barba (${formatarMoeda(BARBA_ADICIONAL.preco)})` : null,
       `Data: ${formatarDataBR(data)}`,
       `Horário: ${hora}`,
-      "----------------------------------------",
-      `Valor total: ${servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : ""}`,
       "----------------------------------------",
       `Valor total: ${servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : ""}`,
       "----------------------------------------",
@@ -559,9 +541,7 @@ function CardAgendamento() {
     notyf.success("Agendamento aberto no WhatsApp. Confirme o envio por lá.");
 
     lsRemove(LS_SERVICO, LS_BARBA, LS_DATA, LS_HORA, LS_NOME, LS_TELEFONE);
-    lsRemove(LS_SERVICO, LS_BARBA, LS_DATA, LS_HORA, LS_NOME, LS_TELEFONE);
     setServicoId("");
-    setComBarba(false);
     setComBarba(false);
     setData("");
     setHora("");
@@ -609,7 +589,6 @@ function CardAgendamento() {
             {stepId === "servico" && (
               <>
                 <h3 className={styles.stepTitle}>Qual corte você quer marcar?</h3>
-                <h3 className={styles.stepTitle}>Qual corte você quer marcar?</h3>
                 <p className={styles.stepHint}>Toque em um serviço para selecioná-lo.</p>
                 <div className={styles.listaServicos}>
                   {SERVICOS.map((servico) => {
@@ -634,29 +613,6 @@ function CardAgendamento() {
                     );
                   })}
                 </div>
-
-                {servicoEscolhido && (
-                  <div className={styles.adicionalWrap}>
-                    <span className={styles.campoLabel}>Quer adicionar a barba?</span>
-                    <button
-                      type="button"
-                      className={`${styles.servicoCard} ${comBarba ? styles.servicoCardSelecionado : ""}`}
-                      onClick={() => setComBarba((v) => !v)}
-                    >
-                      <div className={styles.servicoCardIconWrap}>
-                        <div className={styles.placeholderImg}>
-                          <i className={`bx ${BARBA_ADICIONAL.icone}`} aria-hidden="true" />
-                        </div>
-                      </div>
-                      <div className={styles.servicoCardInfo}>
-                        <span className={styles.servicoCardNome}>{BARBA_ADICIONAL.nome}</span>
-                        <p className={styles.servicoCardDesc}>{BARBA_ADICIONAL.desc}</p>
-                        <span className={styles.servicoCardPreco}>+ {formatarMoeda(BARBA_ADICIONAL.preco)}</span>
-                      </div>
-                      <span className={styles.servicoCardCheck}>{comBarba && <IconCheck />}</span>
-                    </button>
-                  </div>
-                )}
 
                 {servicoEscolhido && (
                   <div className={styles.adicionalWrap}>
@@ -793,12 +749,6 @@ function CardAgendamento() {
                         <span className={styles.resumoLinhaValor}>Barba (+ {formatarMoeda(BARBA_ADICIONAL.preco)})</span>
                       </div>
                     )}
-                    {comBarba && (
-                      <div className={styles.resumoLinha}>
-                        <span className={styles.resumoLinhaLabel}>Adicional</span>
-                        <span className={styles.resumoLinhaValor}>Barba (+ {formatarMoeda(BARBA_ADICIONAL.preco)})</span>
-                      </div>
-                    )}
                     <div className={styles.resumoLinha}>
                       <span className={styles.resumoLinhaLabel}>Data</span>
                       <span className={styles.resumoLinhaValor}>{formatarDataBR(data) || "—"}</span>
@@ -820,8 +770,6 @@ function CardAgendamento() {
                     <div className={`${styles.resumoLinha} ${styles.resumoLinhaTotal}`}>
                       <span className={styles.resumoLinhaLabel}>Valor total</span>
                       <span className={styles.resumoLinhaValor}>{formatarValorTotal(servicoEscolhido, comBarba)}</span>
-                      <span className={styles.resumoLinhaLabel}>Valor total</span>
-                      <span className={styles.resumoLinhaValor}>{formatarValorTotal(servicoEscolhido, comBarba)}</span>
                     </div>
                   </div>
                 )}
@@ -837,12 +785,8 @@ function CardAgendamento() {
                 {servicoEscolhido
                   ? `${servicoEscolhido.nome}${comBarba ? " + Barba" : ""}`
                   : "Nenhum serviço escolhido"}
-                {servicoEscolhido
-                  ? `${servicoEscolhido.nome}${comBarba ? " + Barba" : ""}`
-                  : "Nenhum serviço escolhido"}
               </span>
               <span className={styles.footerTotal}>
-                {servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : "—"}
                 {servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : "—"}
               </span>
             </div>
@@ -997,14 +941,6 @@ function Footer() {
       <div className={styles.rodapeCopy}>
         Barão Barbearia · Segunda a sábado, das 8h às 20h
       </div>
-      <a
-        href={`https://wa.me/${JEFFERSON_WHATSAPP}?text=${encodeURIComponent(JEFFERSON_MENSAGEM)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.rodapeCredito}
-      >
-        Gostou deste site? Peça o seu, personalizado, com Jefferson Dev
-      </a>
       <a
         href={`https://wa.me/${JEFFERSON_WHATSAPP}?text=${encodeURIComponent(JEFFERSON_MENSAGEM)}`}
         target="_blank"
