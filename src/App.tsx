@@ -64,6 +64,7 @@ function lsRemove(...chaves: string[]): void {
 
 const LS_SERVICO = "bb_servico";
 const LS_BARBA = "bb_com_barba";
+const LS_BARBA = "bb_com_barba";
 const LS_DATA = "bb_data";
 const LS_HORA = "bb_hora";
 const LS_NOME = "bb_nome";
@@ -83,6 +84,26 @@ const SERVICOS: Servico[] = [
   { id: "cabelo-social", nome: "Corte Social", desc: "Corte clássico, alinhado e discreto.", preco: 13, icone: "bx-cut" },
   { id: "pigmentacao", nome: "Pigmentação", desc: "Pigmentação capilar para cobrir fios brancos ou uniformizar a cor.", preco: 15, icone: "bxs-droplet" },
   { id: "pezinho", nome: "Pézinho", desc: "Acabamento rápido de contorno.", preco: 5, icone: "bx-time-five" },
+];
+
+// Barba não é mais escolhida como corte principal — é um adicional que soma
+// ao valor do corte escolhido no passo 1 do agendamento.
+const BARBA_ADICIONAL: Servico = {
+  id: "barba",
+  nome: "Barba",
+  desc: "Barba alinhada e desenhada na navalha, feita junto com o corte.",
+  preco: 10,
+  icone: "bxs-magic-wand",
+};
+
+// Lista usada só na vitrine "Nossos serviços" (informativa) — mostra o
+// adicional de barba junto com os cortes, mesmo ele não sendo selecionável ali.
+const LISTA_PRECOS: Servico[] = [
+  SERVICOS[0],
+  SERVICOS[1],
+  BARBA_ADICIONAL,
+  SERVICOS[2],
+  SERVICOS[3],
 ];
 
 // Barba não é mais escolhida como corte principal — é um adicional que soma
@@ -156,6 +177,15 @@ function formatarMoeda(valor: number): string {
 
 function formatarPreco(servico: Servico): string {
   return servico.apartirDe ? `A partir de ${formatarMoeda(servico.preco)}` : formatarMoeda(servico.preco);
+}
+
+function valorTotal(servico: Servico, comBarba: boolean): number {
+  return servico.preco + (comBarba ? BARBA_ADICIONAL.preco : 0);
+}
+
+function formatarValorTotal(servico: Servico, comBarba: boolean): string {
+  const total = valorTotal(servico, comBarba);
+  return servico.apartirDe ? `A partir de ${formatarMoeda(total)}` : formatarMoeda(total);
 }
 
 function valorTotal(servico: Servico, comBarba: boolean): number {
@@ -287,6 +317,11 @@ const JEFFERSON_WHATSAPP = "5581999367426";
 const JEFFERSON_MENSAGEM =
   "Oi Jefferson, vim do site da Barão Barbearia e estou interessado em ter meu próprio agendamento online personalizado.";
 
+// Crédito discreto no rodapé, com link para o WhatsApp do Jefferson Dev.
+const JEFFERSON_WHATSAPP = "5581999367426";
+const JEFFERSON_MENSAGEM =
+  "Oi Jefferson, vim do site da Barão Barbearia e estou interessado em ter meu próprio agendamento online personalizado.";
+
 /* ============================================================
    HERO
    ============================================================ */
@@ -389,13 +424,20 @@ function Vitrine() {
   const metade = Math.ceil(LISTA_PRECOS.length / 2);
   const colunaA = LISTA_PRECOS.slice(0, metade);
   const colunaB = LISTA_PRECOS.slice(metade);
+  const metade = Math.ceil(LISTA_PRECOS.length / 2);
+  const colunaA = LISTA_PRECOS.slice(0, metade);
+  const colunaB = LISTA_PRECOS.slice(metade);
 
   const renderColuna = (itens: Servico[], chave: string) => (
-    <div className={styles.precosColuna} key={chave}>
+    <div className={`${styles.precosColuna} ${chave}`} key={chave}>
       {itens.map((servico) => (
         <div className={styles.precoItem} key={servico.id}>
           <span className={styles.precoIcone}>
             <i className={`bx ${servico.icone}`} aria-hidden="true" />
+          </span>
+          <span className={styles.precoNome}>
+            {servico.nome}
+            {servico.id === "barba" && <span className={styles.precoTagAdicional}>adicional</span>}
           </span>
           <span className={styles.precoNome}>
             {servico.nome}
@@ -446,6 +488,7 @@ function CardAgendamento() {
 
   const [servicoId, setServicoId] = useState<string>(() => lsGet<string>(LS_SERVICO, ""));
   const [comBarba, setComBarba] = useState<boolean>(() => lsGet<boolean>(LS_BARBA, false));
+  const [comBarba, setComBarba] = useState<boolean>(() => lsGet<boolean>(LS_BARBA, false));
   const [data, setData] = useState<string>(() => lsGet<string>(LS_DATA, ""));
   const [hora, setHora] = useState<string>(() => lsGet<string>(LS_HORA, ""));
   const [nome, setNome] = useState<string>(() => lsGet<string>(LS_NOME, ""));
@@ -453,6 +496,7 @@ function CardAgendamento() {
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => { lsSet(LS_SERVICO, servicoId); }, [servicoId]);
+  useEffect(() => { lsSet(LS_BARBA, comBarba); }, [comBarba]);
   useEffect(() => { lsSet(LS_BARBA, comBarba); }, [comBarba]);
   useEffect(() => { lsSet(LS_DATA, data); }, [data]);
   useEffect(() => { lsSet(LS_HORA, hora); }, [hora]);
@@ -516,8 +560,11 @@ function CardAgendamento() {
       "----------------------------------------",
       `Serviço: ${servicoEscolhido ? servicoEscolhido.nome : ""}`,
       comBarba ? `Adicional: Barba (${formatarMoeda(BARBA_ADICIONAL.preco)})` : null,
+      comBarba ? `Adicional: Barba (${formatarMoeda(BARBA_ADICIONAL.preco)})` : null,
       `Data: ${formatarDataBR(data)}`,
       `Horário: ${hora}`,
+      "----------------------------------------",
+      `Valor total: ${servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : ""}`,
       "----------------------------------------",
       `Valor total: ${servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : ""}`,
       "----------------------------------------",
@@ -541,7 +588,9 @@ function CardAgendamento() {
     notyf.success("Agendamento aberto no WhatsApp. Confirme o envio por lá.");
 
     lsRemove(LS_SERVICO, LS_BARBA, LS_DATA, LS_HORA, LS_NOME, LS_TELEFONE);
+    lsRemove(LS_SERVICO, LS_BARBA, LS_DATA, LS_HORA, LS_NOME, LS_TELEFONE);
     setServicoId("");
+    setComBarba(false);
     setComBarba(false);
     setData("");
     setHora("");
@@ -589,6 +638,7 @@ function CardAgendamento() {
             {stepId === "servico" && (
               <>
                 <h3 className={styles.stepTitle}>Qual corte você quer marcar?</h3>
+                <h3 className={styles.stepTitle}>Qual corte você quer marcar?</h3>
                 <p className={styles.stepHint}>Toque em um serviço para selecioná-lo.</p>
                 <div className={styles.listaServicos}>
                   {SERVICOS.map((servico) => {
@@ -613,6 +663,29 @@ function CardAgendamento() {
                     );
                   })}
                 </div>
+
+                {servicoEscolhido && (
+                  <div className={styles.adicionalWrap}>
+                    <span className={styles.campoLabel}>Quer adicionar a barba?</span>
+                    <button
+                      type="button"
+                      className={`${styles.servicoCard} ${comBarba ? styles.servicoCardSelecionado : ""}`}
+                      onClick={() => setComBarba((v) => !v)}
+                    >
+                      <div className={styles.servicoCardIconWrap}>
+                        <div className={styles.placeholderImg}>
+                          <i className={`bx ${BARBA_ADICIONAL.icone}`} aria-hidden="true" />
+                        </div>
+                      </div>
+                      <div className={styles.servicoCardInfo}>
+                        <span className={styles.servicoCardNome}>{BARBA_ADICIONAL.nome}</span>
+                        <p className={styles.servicoCardDesc}>{BARBA_ADICIONAL.desc}</p>
+                        <span className={styles.servicoCardPreco}>+ {formatarMoeda(BARBA_ADICIONAL.preco)}</span>
+                      </div>
+                      <span className={styles.servicoCardCheck}>{comBarba && <IconCheck />}</span>
+                    </button>
+                  </div>
+                )}
 
                 {servicoEscolhido && (
                   <div className={styles.adicionalWrap}>
@@ -749,6 +822,12 @@ function CardAgendamento() {
                         <span className={styles.resumoLinhaValor}>Barba (+ {formatarMoeda(BARBA_ADICIONAL.preco)})</span>
                       </div>
                     )}
+                    {comBarba && (
+                      <div className={styles.resumoLinha}>
+                        <span className={styles.resumoLinhaLabel}>Adicional</span>
+                        <span className={styles.resumoLinhaValor}>Barba (+ {formatarMoeda(BARBA_ADICIONAL.preco)})</span>
+                      </div>
+                    )}
                     <div className={styles.resumoLinha}>
                       <span className={styles.resumoLinhaLabel}>Data</span>
                       <span className={styles.resumoLinhaValor}>{formatarDataBR(data) || "—"}</span>
@@ -770,6 +849,8 @@ function CardAgendamento() {
                     <div className={`${styles.resumoLinha} ${styles.resumoLinhaTotal}`}>
                       <span className={styles.resumoLinhaLabel}>Valor total</span>
                       <span className={styles.resumoLinhaValor}>{formatarValorTotal(servicoEscolhido, comBarba)}</span>
+                      <span className={styles.resumoLinhaLabel}>Valor total</span>
+                      <span className={styles.resumoLinhaValor}>{formatarValorTotal(servicoEscolhido, comBarba)}</span>
                     </div>
                   </div>
                 )}
@@ -785,8 +866,12 @@ function CardAgendamento() {
                 {servicoEscolhido
                   ? `${servicoEscolhido.nome}${comBarba ? " + Barba" : ""}`
                   : "Nenhum serviço escolhido"}
+                {servicoEscolhido
+                  ? `${servicoEscolhido.nome}${comBarba ? " + Barba" : ""}`
+                  : "Nenhum serviço escolhido"}
               </span>
               <span className={styles.footerTotal}>
+                {servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : "—"}
                 {servicoEscolhido ? formatarValorTotal(servicoEscolhido, comBarba) : "—"}
               </span>
             </div>
@@ -941,6 +1026,14 @@ function Footer() {
       <div className={styles.rodapeCopy}>
         Barão Barbearia · Segunda a sábado, das 8h às 20h
       </div>
+      <a
+        href={`https://wa.me/${JEFFERSON_WHATSAPP}?text=${encodeURIComponent(JEFFERSON_MENSAGEM)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.rodapeCredito}
+      >
+        Gostou deste site? Peça o seu, personalizado, com Jefferson Dev
+      </a>
       <a
         href={`https://wa.me/${JEFFERSON_WHATSAPP}?text=${encodeURIComponent(JEFFERSON_MENSAGEM)}`}
         target="_blank"
